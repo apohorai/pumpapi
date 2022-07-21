@@ -5,8 +5,21 @@
         <title></title>
 </head>
 <body>
-	<p id="led_status">0</p>
-        <button id="setled" onclick="setLedStatus()">OFF</button>
+        <button id="setled" onclick="setLedStatus()">PUMP</button>
+	<br>
+	<br>
+	<span>RED </span><input id="rgb_red"></input>
+	<br>
+	<span>GREEN </span><input id="rgb_green"></input>
+	<br>
+	<span>BLUE</span><input id="rgb_blue"></input>
+	<br>
+        <button id="setrgbled" onclick="setRgbLedStatus()">RGB LED</button>
+	<br>
+	<br>
+        <button id="settoblue" onclick="setValuesToBlue()">Set to Blue</button>
+        <button id="settored" onclick="setValuesToRed()">Set to Red</button>
+        <button id="settogreen" onclick="setValuesToGreen()">Set to Green</button>
         <script src="pump.js"></script>
 </body>
 </html>

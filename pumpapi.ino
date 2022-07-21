@@ -4,6 +4,9 @@
 #include <ArduinoJson.h>
  
 #define LED_PIN 2
+#define LED_RED_PIN 26
+#define LED_GREEN_PIN 27
+#define LED_BLUE_PIN 25
 const char *SSID = "POHANET";
 const char *PWD = "Emese123";
 WebServer server(80);
@@ -13,6 +16,9 @@ StaticJsonDocument<250> jsonDocument;
 char buffer[250];
  
 // env variable
+float rgb_red;
+float rgb_blue;
+float rgb_green;
 float pump_right;
 float pump_left;
 float led;
@@ -36,8 +42,10 @@ void setup_routing() {
   server.on("/pump_right", getPumpRight);	 	 
   server.on("/pump_left", getPumpLeft);	 	 
   server.on("/led", getLed);	 	 
+  server.on("/rgbled", getRgbLed);	 	 
   server.on("/env", getEnv);	 	 
-  server.on("/setled", HTTP_POST, handlePost);	 	 
+  server.on("/setled", HTTP_POST, setLed);	 	 
+  server.on("/setrgbled", HTTP_POST, setRgbLed);	 	 
   	 	 
   // start server	 	 
   server.begin();	 	 
@@ -88,6 +96,17 @@ server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(200, "application/json", buffer);
 }
  
+void getRgbLed() {
+  Serial.println("Get RGB Led");
+server.sendHeader("Access-Control-Allow-Origin", "*");
+  jsonDocument.clear();
+  add_json_object("rgbred", rgb_red, "");
+  add_json_object("rgbblue",rgb_blue, "");
+  add_json_object("rgbgreen", rgb_green, "");
+  serializeJson(jsonDocument, buffer);
+  server.send(200, "application/json", buffer);
+}
+ 
 void getEnv() {
   Serial.println("Get env");
   jsonDocument.clear();
@@ -97,7 +116,7 @@ void getEnv() {
   serializeJson(jsonDocument, buffer);
   server.send(200, "application/json", buffer);
 }
-void handlePost() {
+void setLed() {
   server.sendHeader("Access-Control-Allow-Headers", "*");
   server.sendHeader("Access-Control-Allow-Origin", "*");
   if (server.hasArg("plain") == false) {
@@ -126,12 +145,40 @@ void handlePost() {
         Serial.println("led = off");
     }
 }
-
   // Respond to the client
   jsonDocument.clear();
   add_json_object("pump_right", pump_right, "");
   add_json_object("pump_left", pump_left, "");
   add_json_object("led", led, "");
+  serializeJson(jsonDocument, buffer);
+  server.send(200, "application/json", buffer);
+}
+void setRgbLed() {
+  server.sendHeader("Access-Control-Allow-Headers", "*");
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  if (server.hasArg("plain") == false) {
+    //handle error here
+  }
+  String body = server.arg("plain");
+  deserializeJson(jsonDocument, body);
+  
+  if (jsonDocument.containsKey("rgbred")) {
+    rgb_red = jsonDocument["rgbred"];
+}
+  if (jsonDocument.containsKey("rgbblue")) {
+  rgb_blue= jsonDocument["rgbblue"];
+}
+  if (jsonDocument.containsKey("rgbgreen")) {
+  rgb_green = jsonDocument["rgbgreen"];
+}
+	analogWrite(LED_GREEN_PIN,rgb_green);
+	analogWrite(LED_BLUE_PIN,rgb_blue);
+	analogWrite(LED_RED_PIN,rgb_red);
+  // Respond to the client
+  jsonDocument.clear();
+  add_json_object("rgbred", rgb_red, "");
+  add_json_object("rgbblue", rgb_blue, "");
+  add_json_object("rgbgreen", rgb_green, "");
   serializeJson(jsonDocument, buffer);
   server.send(200, "application/json", buffer);
 }
@@ -147,6 +194,9 @@ void setup_task(){
 }
 void setup() {
   pinMode(LED_PIN,OUTPUT);
+  pinMode(LED_RED_PIN,OUTPUT);
+  pinMode(LED_GREEN_PIN,OUTPUT);
+  pinMode(LED_BLUE_PIN,OUTPUT);
   pump_right = 0;
   pump_left = 0;
   led = 0;
