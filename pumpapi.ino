@@ -7,6 +7,7 @@
 #define LED_RED_PIN 26
 #define LED_GREEN_PIN 27
 #define LED_BLUE_PIN 25
+#define MOISTURE_PIN 35
 const char *SSID = "POHANET";
 const char *PWD = "Emese123";
 WebServer server(80);
@@ -22,6 +23,9 @@ float rgb_green;
 float pump_right;
 float pump_left;
 float led;
+int moisture;
+int moisture_sum;
+
  
 void connectToWiFi() {
   Serial.print("Connecting to ");
@@ -42,6 +46,7 @@ void setup_routing() {
   server.on("/pump_right", getPumpRight);	 	 
   server.on("/pump_left", getPumpLeft);	 	 
   server.on("/led", getLed);	 	 
+  server.on("/moisture", getMoisture);	 	 
   server.on("/rgbled", getRgbLed);	 	 
   server.on("/env", getEnv);	 	 
   server.on("/setled", HTTP_POST, setLed);	 	 
@@ -96,6 +101,18 @@ server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(200, "application/json", buffer);
 }
  
+void getMoisture() {
+moisture_sum=0; 
+for (int i = 0; i <= 10; i++) {
+moisture = analogRead(MOISTURE_PIN);
+moisture_sum=moisture_sum+moisture;
+  Serial.println(moisture);
+    delay(10);
+}
+  create_json("moisture", moisture_sum/10, "");
+server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.send(200, "application/json", buffer);
+}
 void getRgbLed() {
   Serial.println("Get RGB Led");
 server.sendHeader("Access-Control-Allow-Origin", "*");
@@ -197,13 +214,14 @@ void setup() {
   pinMode(LED_RED_PIN,OUTPUT);
   pinMode(LED_GREEN_PIN,OUTPUT);
   pinMode(LED_BLUE_PIN,OUTPUT);
+  analogReadResolution(12);
   pump_right = 0;
   pump_left = 0;
   led = 0;
   connectToWiFi();	 	 
   setup_task();	 	 
   setup_routing(); 	 	 
-  Serial.begin(115200);	 	 
+  Serial.begin(9600);	 	 
   Serial.println("started");
 }	 	 
   	 	 

@@ -2,6 +2,7 @@ led_status = -1;
 rgb_red = -1;
 rgb_green = -1;
 rgb_blue = -1;
+moisture = -1;
 PUMP_URL="http://192.168.50.45/";
 getLedStatus();
 document.getElementById("setled").style.width = "20vw";
@@ -36,6 +37,19 @@ function getLedStatus() {
 	});
 }
 
+function getMoisture() {
+	mgetxhr = new XMLHttpRequest();
+	mgetxhr.open("GET", PUMP_URL+"moisture");
+	mgetxhr.responseType = "json";
+	mgetxhr.send();
+	mgetxhr.addEventListener("readystatechange", () => {
+		if (mgetxhr.readyState === 4) {
+			moisture = mgetxhr.response.value;
+	document.getElementById("moisture_value").textContent = (moisture-1100)/2000;
+			console.log(moisture);
+			}
+		});
+	};
 function getRgbLedStatus() {
 	json = "";
 	xhr = new XMLHttpRequest();
@@ -56,7 +70,6 @@ document.getElementById("rgb_red").textContent = rgb_red;
 document.getElementById("rgb_green").textContent = rgb_green;
 				}
 			}
-			console.log("SET",rgb_red);
 			}
 		});
 	};
@@ -135,5 +148,53 @@ function setValuesToRed (){
 	document.getElementById("rgb_blue").value = 0;
 	document.getElementById("rgb_green").value = 0;
 	setRgbLedStatus();
+}
+function loop(){
+for (let i = 0; i < 200; i++) {
+	document.getElementById("rgb_red").value = i;
+	document.getElementById("rgb_green").value = 0;
+	document.getElementById("rgb_blue").value = 0;
+	setRgbLedStatus()
+	console.log(i);
+}
+for (let i = 200; i > 0; i--) {
+	document.getElementById("rgb_red").value = i;
+	document.getElementById("rgb_green").value = 0;
+	document.getElementById("rgb_blue").value = 0;
+	setRgbLedStatus()
+	console.log(i);
+}
+for (let i = 0; i < 200; i++) {
+	document.getElementById("rgb_red").value = 0;
+	document.getElementById("rgb_green").value = i;
+	document.getElementById("rgb_blue").value = 0;
+	setRgbLedStatus()
+	console.log(i);
+}
+for (let i = 200; i > 0; i--) {
+	document.getElementById("rgb_red").value = 0;
+	document.getElementById("rgb_green").value = i;
+	document.getElementById("rgb_blue").value = 0;
+	setRgbLedStatus()
+	console.log(i);
+}
+for (let i = 0; i < 200; i++) {
+	document.getElementById("rgb_red").value = 0;
+	document.getElementById("rgb_green").value = 0;
+	document.getElementById("rgb_blue").value = i;
+	setRgbLedStatus()
+	console.log(i);
+}
+for (let i = 200; i > 0; i--) {
+	document.getElementById("rgb_red").value = 0;
+	document.getElementById("rgb_green").value = 0;
+	document.getElementById("rgb_blue").value = i;
+	setRgbLedStatus()
+	console.log(i);
+}
+	document.getElementById("rgb_red").value = 0;
+	document.getElementById("rgb_green").value = 0;
+	document.getElementById("rgb_blue").value = 0;
+	setRgbLedStatus()
 }
 
