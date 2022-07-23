@@ -3,28 +3,95 @@
 <head>
         <meta charset="UTF-8">
         <title></title>
+	 <link rel="stylesheet" href="pump.css">
 </head>
-<body>
-        <button id="setled" onclick="setLedStatus()">PUMP</button>
+<body onload="getLedStatus(1);
+getPumpStatus(1);
+getLedStatus(2);
+getPumpStatus(2);
+getLedStatus(3);
+getPumpStatus(3);
+	">
+	<div class="first">
+	<div class="second">
+	<h1>main pump</h1>
+        <button id="setled1" class="mainButtons" onclick="setLedStatus(1)">LED</button>
+	<br>
+        <button id="setpump1" class="mainButtons" onclick="setPumpStatus(1)">PUMP</button>
 	<br>
 	<br>
-	<span>RED </span><input id="rgb_red"></input>
+	<span>RED </span><input id="rgb_red1"></input>
 	<br>
-	<span>GREEN </span><input id="rgb_green"></input>
+	<span>GREEN </span><input id="rgb_green1"></input>
 	<br>
-	<span>BLUE</span><input id="rgb_blue"></input>
+	<span>BLUE</span><input id="rgb_blue1"></input>
 	<br>
-        <button id="setrgbled" onclick="setRgbLedStatus()">RGB LED</button>
+        <button id="setrgbled1" onclick="setRgbLedStatus(1)">RGB LED</button>
 	<br>
 	<br>
-        <button id="settoblue" onclick="setValuesToBlue()">Set to Blue</button>
-        <button id="settored" onclick="setValuesToRed()">Set to Red</button>
-        <button id="settogreen" onclick="setValuesToGreen()">Set to Green</button>
+        <button id="settoblue1" onclick="setValuesToBlue(1)">Set to Blue</button>
+        <button id="settored1" onclick="setValuesToRed(1)">Set to Red</button>
+        <button id="settogreen1" onclick="setValuesToGreen(1)">Set to Green</button>
 	<br>
-        <button id="loop" onclick="loop()">RGBloop</button>
+        <button id="loop1" onclick="loop(1)">RGBloop</button>
 	<br>
-        <button id="moisture" onclick="getMoisture()">getMoisture</button>
-	<p id="moisture_value">xxx</p>
+        <button id="moisture1" onclick="getMoisture(1)">getMoisture</button>
+	<p id="moisture_value1">xxx</p>
+	</div>
+
+	<div class="second">
+	<h1>dev pump</h1>
+        <button id="setled2" class="mainButtons" onclick="setLedStatus(2)">LED</button>
+	<br>
+        <button id="setpump2"  class="mainButtons" onclick="setPumpStatus(2)">PUMP</button>
+	<br>
+	<br>
+	<span>RED </span><input id="rgb_red2"></input>
+	<br>
+	<span>GREEN </span><input id="rgb_green2"></input>
+	<br>
+	<span>BLUE</span><input id="rgb_blue2"></input>
+	<br>
+        <button id="setrgbled2" onclick="setRgbLedStatus(2)">RGB LED</button>
+	<br>
+	<br>
+        <button id="settoblue2" onclick="setValuesToBlue(2)">Set to Blue</button>
+        <button id="settored2" onclick="setValuesToRed(2)">Set to Red</button>
+        <button id="settogreen2" onclick="setValuesToGreen(2)">Set to Green</button>
+	<br>
+        <button id="loop2" onclick="loop(2)">RGBloop</button>
+	<br>
+        <button id="moisture2" onclick="getMoisture(2)">getMoisture</button>
+	<p id="moisture_value2">xxx</p>
+	</div>
+	
+	<div class="second">
+	<h1>dev pump</h1>
+        <button id="setled3" class="mainButtons" onclick="setLedStatus(3)">LED</button>
+	<br>
+        <button id="setpump3" class="mainButtons" onclick="setPumpStatus(3)">PUMP</button>
+	<br>
+	<br>
+	<span>RED </span><input id="rgb_red3"></input>
+	<br>
+	<span>GREEN </span><input id="rgb_green3"></input>
+	<br>
+	<span>BLUE</span><input id="rgb_blue3"></input>
+	<br>
+        <button id="setrgbled3" onclick="setRgbLedStatus(3)">RGB LED</button>
+	<br>
+	<br>
+        <button id="settoblue3" onclick="setValuesToBlue(3)">Set to Blue</button>
+        <button id="settored3" onclick="setValuesToRed(3)">Set to Red</button>
+        <button id="settogreen3" onclick="setValuesToGreen(3)">Set to Green</button>
+	<br>
+        <button id="loop3" onclick="loop(3)">RGBloop</button>
+	<br>
+        <button id="moisture3" onclick="getMoisture(3)">getMoisture</button>
+	<p id="moisture_value3">xxx</p>
+	</div>
+
+	</div>
         <script src="pump.js"></script>
 </body>
 </html>

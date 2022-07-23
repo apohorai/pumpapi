@@ -1,0 +1,28 @@
+.first {
+    border: 3px solid #fff;
+    padding: 20px;
+}
+
+.second {
+    width: 26%;
+    float: left;
+    padding: 20px;
+    margin:3px;
+    border: 2px solid grey;
+}  
+input {
+	width: 10vw;
+	align-items: Right;
+}
+button {
+	width: 7vw;
+	font-size: 0.5rem;
+}
+h1{
+	text-align: center;
+}
+.mainButtons{
+	font-size: 2rem;
+	width: 20vw;
+	border: none;
+}

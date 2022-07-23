@@ -7,6 +7,7 @@
 #define LED_RED_PIN 26
 #define LED_GREEN_PIN 27
 #define LED_BLUE_PIN 25
+#define PUMP_PIN 18
 #define MOISTURE_PIN 35
 const char *SSID = "POHANET";
 const char *PWD = "Emese123";
@@ -91,6 +92,7 @@ void getPumpLeft() {
 void getPumpRight() {
   Serial.println("Get Pump Right");
   create_json("pump_right", pump_right, "");
+server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(200, "application/json", buffer);
 }
  
@@ -144,6 +146,14 @@ void setLed() {
   
   if (jsonDocument.containsKey("pump_right")) {
     pump_right = jsonDocument["pump_right"];
+    if(pump_right==1){
+	digitalWrite(PUMP_PIN,HIGH);
+        Serial.println("pump = on");
+    }
+    if(pump_right==0){
+	digitalWrite(PUMP_PIN,LOW);
+        Serial.println("pump = off");
+    }
     Serial.println(pump_right);
 }
   if (jsonDocument.containsKey("pump_left")) {
@@ -211,6 +221,7 @@ void setup_task(){
 }
 void setup() {
   pinMode(LED_PIN,OUTPUT);
+  pinMode(PUMP_PIN,OUTPUT);
   pinMode(LED_RED_PIN,OUTPUT);
   pinMode(LED_GREEN_PIN,OUTPUT);
   pinMode(LED_BLUE_PIN,OUTPUT);
