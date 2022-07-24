@@ -1,5 +1,5 @@
-led_status = -1;
-pump_right = -1;
+led_status = [];
+pump_right = [];
 rgb_red = -1;
 rgb_green = -1;
 rgb_blue = -1;
@@ -20,54 +20,56 @@ function whichBoard(id){
 }
 
 function getLedStatus(id) {
+	let idlocal = id;
 	whichBoard(id);
-	ledxhr = new XMLHttpRequest();
+	let ledxhr = new XMLHttpRequest();
 	ledxhr.open("GET", url+"led");
 	ledxhr.responseType = "json";
 	ledxhr.send();
 	ledxhr.addEventListener("readystatechange", () => {
 		if (ledxhr.readyState === 4) {
-			led_status = ledxhr.response.value;
-			console.log("GET LED", led_status +" id="+id);
+			led_status[idlocal] = ledxhr.response.value;
+			console.log("GET LED", led_status[idlocal] +" id="+idlocal);
 
-			if (led_status == 1) {
-				document.getElementById("setled"+id).innerHTML =
-					"off";
+			if (led_status[idlocal] == 1) {
+				document.getElementById("setled"+idlocal).innerHTML =
+					"led off";
 				document.getElementById(
-					"setled"+id
+					"setled"+idlocal
 				).style.background = "red";
 			}
-			if (led_status == 0) {
-				document.getElementById("setled"+id).innerHTML =
-					"on";
+			if (led_status[idlocal] == 0) {
+				document.getElementById("setled"+idlocal).innerHTML =
+					"led on";
 				document.getElementById(
-					"setled"+id
+					"setled"+idlocal
 				).style.background = "green";
 			}
 		}
 	});
 }
 function getPumpStatus(id) {
-	whichBoard(id);
-	getxhr = new XMLHttpRequest();
+	let idlocal=id;
+	whichBoard(idlocal);
+	let getxhr = new XMLHttpRequest();
 	getxhr.open("GET", url+"pump_right");
 	getxhr.responseType = "json";
 	getxhr.send();
 	getxhr.addEventListener("readystatechange", () => {
 		if (getxhr.readyState === 4) {
-			pump_right = getxhr.response.value;
-			console.log("GET PUMP", pump_right);
+			pump_right[idlocal] = getxhr.response.value;
+			console.log("GET PUMP", pump_right[idlocal]+" id:"+id);
 
-			if (pump_right== 1) {
+			if (pump_right[idlocal]== 1) {
 				document.getElementById("setpump"+id).innerHTML =
-					"off";
+					"pump off";
 				document.getElementById(
 					"setpump"+id
 				).style.background = "red";
 			}
-			if (pump_right== 0) {
+			if (pump_right[idlocal]== 0) {
 				document.getElementById("setpump"+id).innerHTML =
-					"on";
+					"pump on";
 				document.getElementById(
 					"setpump"+id
 				).style.background = "green";
@@ -78,7 +80,7 @@ function getPumpStatus(id) {
 
 function getMoisture(id) {
 	whichBoard(id);
-	mgetxhr = new XMLHttpRequest();
+	let mgetxhr = new XMLHttpRequest();
 	mgetxhr.open("GET", url+"moisture");
 	mgetxhr.responseType = "json";
 	mgetxhr.send();
@@ -93,7 +95,7 @@ function getMoisture(id) {
 function getRgbLedStatus(id) {
 	whichBoard(id);
 	json = "";
-	xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 	xhr.open("GET", url+"rgbled");
 	xhr.responseType = "json";
 	xhr.send();
@@ -116,15 +118,18 @@ document.getElementById("rgb_green"+id).textContent = rgb_green;
 	};
 
 function setLedStatus(id) {
-	whichBoard(id);
+	let localid = id;
+	whichBoard(localid);
+	getLedStatus(localid);
+	
 	json = "";
-	xhr = new XMLHttpRequest();
-	if (led_status == 1) {
+	let xhr = new XMLHttpRequest();
+	if (led_status[localid] == 1) {
 		json = JSON.stringify({
 			led: "0",
 		});
 	}
-	if (led_status == 0) {
+	if (led_status[localid] == 0) {
 		json = JSON.stringify({
 			led: "1",
 		});
@@ -137,24 +142,25 @@ function setLedStatus(id) {
 			let text = "";
 			for (const x in data) {
 				if (data[x].type == "led") {
-					led_status = text = data[x].value;
+					led_status[localid] = text = data[x].value;
 				}
 			}
-			console.log("SET", led_status);
-			getLedStatus(id);
+			console.log("SET", led_status[localid]);
+			getLedStatus(localid);
 		}
 	});
 }
 function setPumpStatus(id) {
-	whichBoard(id);
+	let idlocal=id;
+	whichBoard(idlocal);
 	json = "";
-	xhr = new XMLHttpRequest();
-	if (pump_right == 1) {
+	let xhr = new XMLHttpRequest();
+	if (pump_right[idlocal] == 1) {
 		json = JSON.stringify({
 			pump_right: "0",
 		});
 	}
-	if (pump_right == 0) {
+	if (pump_right[idlocal] == 0) {
 		json = JSON.stringify({
 			pump_right: "1",
 		});
@@ -167,18 +173,18 @@ function setPumpStatus(id) {
 			let text = "";
 			for (const x in data) {
 				if (data[x].type == "pump_right") {
-					pump_right= text = data[x].value;
+					pump_right[idlocal]= text = data[x].value;
 				}
 			}
-			console.log("SET", pump_right);
-			getPumpStatus(id);
+			console.log("SET", pump_right[idlocal]);
+			getPumpStatus(idlocal);
 		}
 	});
 }
 function setRgbLedStatus(id) {
 	whichBoard(id);
 	json = "";
-	xhr = new XMLHttpRequest();
+	let xhr = new XMLHttpRequest();
 		json = JSON.stringify({
 		rgbred: document.getElementById("rgb_red"+id).value,
 		rgbblue: document.getElementById("rgb_blue"+id).value,
