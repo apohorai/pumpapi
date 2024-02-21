@@ -5,18 +5,11 @@
         <title></title>
 	 <link rel="stylesheet" href="pump.css">
 </head>
-<body onload="getLedStatus(1);
-getPumpStatus(1);
-getLedStatus(2);
-getPumpStatus(2);
-getLedStatus(3);
-getPumpStatus(3);
-getLedStatus(4);
-getPumpStatus(4);
-getLedStatus(5);
-getPumpStatus(5);
-	">
-	<div class="first">
+<body onload= "
+
+	renderHTML()">
+	<div id="main"></div>
+	<!-- <div class="first">
 	<div class="second">
 	<h1>main pump</h1>
         <button id="setled1" class="mainButtons" onclick="setLedStatus(1)">LED</button>
@@ -145,7 +138,7 @@ getPumpStatus(5);
 	<br>
         <button id="moisture5" onclick="getMoisture(5)">getMoisture</button>
 	<p id="moisture_value5">xxx</p>
-	</div>
+	</div> -->
 
 	</div>
         <script src="pump.js"></script>

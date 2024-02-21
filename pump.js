@@ -4,34 +4,73 @@ rgb_red = -1;
 rgb_green = -1;
 rgb_blue = -1;
 moisture = -1;
-url = "";
-var wsUri = "ws://127.0.0.1:5000";
-websocket = new WebSocket(wsUri);
+// url = "";
+// var wsUri = "ws://127.0.0.1:5000";
+// websocket = new WebSocket(wsUri);
 
-websocket.onopen = function (evt) {
-	console.log("connected to websocket server");
-	websocket.send("GUI connected...");
-};
-websocket.onmessage = function (msg) {
-	var string_arr = JSON.parse(msg["data"]).data;
-	var string = "";
+// websocket.onopen = function (evt) {
+// 	console.log("connected to websocket server");
+// 	websocket.send("GUI connected...");
+// };
+// websocket.onmessage = function (msg) {
+// 	var string_arr = JSON.parse(msg["data"]).data;
+// 	var string = "";
 
-	string_arr.forEach((element) => {
-		string += String.fromCharCode(element);
-	});
+// 	string_arr.forEach((element) => {
+// 		string += String.fromCharCode(element);
+// 	});
 
-	message = JSON.parse(string);
-	//sleep(100).then(() => { getLedStatus(2) });
-	if (message.item == "led") {
-		getLedStatus(2);
+// 	message = JSON.parse(string);
+// 	//sleep(100).then(() => { getLedStatus(2) });
+// 	if (message.item == "led") {
+// 		getLedStatus(2);
+// 	}
+// 	if (message.item == "moisture") {
+// 			document.getElementById(
+// 				"moisture_value" + 2 
+// 			).textContent = (message.value - 1100) / 2000;
+// 		console.log(message.value)
+// 	}
+// };
+function renderHTML(){
+	for (let i = 1; i < 4; i++) {
+		getLedStatus(i);
+		getPumpStatus(i);
+	var board="board";
+	var board_id=i;
+	var currentBoardLed=board+board_id;
+	var currentBoardPump=board+board_id;
+	console.log(currentBoardLed);
+	console.log(currentBoardPump);
+	var div = document.createElement("div");
+	div.style.width = "26%";
+	div.style.float = "left";
+	div.style.padding = "20px";
+	div.style.margin = "3px";
+	div.style.color = "white";
+	div.style.border = "2px solid grey";
+
+	currentBoardLed = document.createElement('button');
+	currentBoardLed.innerText = "initial getLed";
+	currentBoardLed.setAttribute("onclick", "setLedStatus("+board_id+")");
+	currentBoardLed.setAttribute("id", "setled"+board_id);
+
+	currentBoardPump = document.createElement('button');
+	currentBoardPump.innerText = "initial getPump";
+	currentBoardPump.setAttribute("onclick", "setPumpStatus("+board_id+")");
+	currentBoardPump.setAttribute("id", "setpump"+board_id);
+
+	div.append(currentBoardLed);
+	div.append(currentBoardPump);
+	document.getElementById("main").appendChild(div);
 	}
-	if (message.item == "moisture") {
-			document.getElementById(
-				"moisture_value" + 2 
-			).textContent = (message.value - 1100) / 2000;
-		console.log(message.value)
-	}
-};
+
+
+
+
+
+
+}
 
 function whichBoard(id) {
 	if (id == 1) {
