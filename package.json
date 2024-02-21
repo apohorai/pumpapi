@@ -1,0 +1,22 @@
+{
+  "name": "ls",
+  "version": "1.0.0",
+  "description": "",
+  "main": "wsServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apohorai/pumpapi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/apohorai/pumpapi/issues"
+  },
+  "homepage": "https://github.com/apohorai/pumpapi#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}

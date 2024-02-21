@@ -5,73 +5,115 @@ rgb_green = -1;
 rgb_blue = -1;
 moisture = -1;
 url = "";
+var wsUri = "ws://127.0.0.1:5000";
+websocket = new WebSocket(wsUri);
 
-function whichBoard(id){
-	if (id==1) {
-		url="http://192.168.50.56/";
-	}
-	if (id==2) {
-		url="http://192.168.50.45/";
-	}
-	if (id==3) {
-		url="http://192.168.50.75/";
-	}
+websocket.onopen = function (evt) {
+	console.log("connected to websocket server");
+	websocket.send("GUI connected...");
+};
+websocket.onmessage = function (msg) {
+	var string_arr = JSON.parse(msg["data"]).data;
+	var string = "";
 
+	string_arr.forEach((element) => {
+		string += String.fromCharCode(element);
+	});
+
+	message = JSON.parse(string);
+	//sleep(100).then(() => { getLedStatus(2) });
+	if (message.item == "led") {
+		getLedStatus(2);
+	}
+	if (message.item == "moisture") {
+			document.getElementById(
+				"moisture_value" + 2 
+			).textContent = (message.value - 1100) / 2000;
+		console.log(message.value)
+	}
+};
+
+function whichBoard(id) {
+	if (id == 1) {
+		url = "http://192.168.1.102/";
+	}
+	if (id == 2) {
+		url = "http://192.168.1.103/";
+	}
+	if (id == 3) {
+		url = "http://192.168.1.104/";
+	}
+	if (id == 4) {
+		url = "http://192.168.50.77/";
+	}
+	if (id == 5) {
+		url = "http://192.168.50.63/";
+	}
 }
 
 function getLedStatus(id) {
 	let idlocal = id;
 	whichBoard(id);
 	let ledxhr = new XMLHttpRequest();
-	ledxhr.open("GET", url+"led");
+	ledxhr.open("GET", url + "led");
 	ledxhr.responseType = "json";
 	ledxhr.send();
 	ledxhr.addEventListener("readystatechange", () => {
 		if (ledxhr.readyState === 4) {
 			led_status[idlocal] = ledxhr.response.value;
-			console.log("GET LED", led_status[idlocal] +" id="+idlocal);
+			console.log(
+				"GET LED",
+				led_status[idlocal] + " id=" + idlocal
+			);
 
 			if (led_status[idlocal] == 1) {
-				document.getElementById("setled"+idlocal).innerHTML =
-					"led off";
 				document.getElementById(
-					"setled"+idlocal
+					"setled" + idlocal
+				).innerHTML = "led off";
+				document.getElementById(
+					"setled" + idlocal
 				).style.background = "red";
 			}
 			if (led_status[idlocal] == 0) {
-				document.getElementById("setled"+idlocal).innerHTML =
-					"led on";
 				document.getElementById(
-					"setled"+idlocal
+					"setled" + idlocal
+				).innerHTML = "led on";
+				document.getElementById(
+					"setled" + idlocal
 				).style.background = "green";
 			}
 		}
 	});
 }
 function getPumpStatus(id) {
-	let idlocal=id;
+	let idlocal = id;
 	whichBoard(idlocal);
 	let getxhr = new XMLHttpRequest();
-	getxhr.open("GET", url+"pump_right");
+	getxhr.open("GET", url + "pump_right");
 	getxhr.responseType = "json";
 	getxhr.send();
 	getxhr.addEventListener("readystatechange", () => {
 		if (getxhr.readyState === 4) {
 			pump_right[idlocal] = getxhr.response.value;
-			console.log("GET PUMP", pump_right[idlocal]+" id:"+id);
+			console.log(
+				"GET PUMP",
+				pump_right[idlocal] + " id:" + id
+			);
 
-			if (pump_right[idlocal]== 1) {
-				document.getElementById("setpump"+id).innerHTML =
-					"pump off";
+			if (pump_right[idlocal] == 1) {
 				document.getElementById(
-					"setpump"+id
+					"setpump" + id
+				).innerHTML = "pump off";
+				document.getElementById(
+					"setpump" + id
 				).style.background = "red";
 			}
-			if (pump_right[idlocal]== 0) {
-				document.getElementById("setpump"+id).innerHTML =
-					"pump on";
+			if (pump_right[idlocal] == 0) {
 				document.getElementById(
-					"setpump"+id
+					"setpump" + id
+				).innerHTML = "pump on";
+				document.getElementById(
+					"setpump" + id
 				).style.background = "green";
 			}
 		}
@@ -81,22 +123,24 @@ function getPumpStatus(id) {
 function getMoisture(id) {
 	whichBoard(id);
 	let mgetxhr = new XMLHttpRequest();
-	mgetxhr.open("GET", url+"moisture");
+	mgetxhr.open("GET", url + "moisture");
 	mgetxhr.responseType = "json";
 	mgetxhr.send();
 	mgetxhr.addEventListener("readystatechange", () => {
 		if (mgetxhr.readyState === 4) {
 			moisture = mgetxhr.response.value;
-	document.getElementById("moisture_value"+id).textContent = (moisture-1100)/2000;
+			document.getElementById(
+				"moisture_value" + id
+			).textContent = (moisture - 1100) / 2000;
 			console.log(moisture);
-			}
-		});
-	};
+		}
+	});
+}
 function getRgbLedStatus(id) {
 	whichBoard(id);
 	json = "";
 	let xhr = new XMLHttpRequest();
-	xhr.open("GET", url+"rgbled");
+	xhr.open("GET", url + "rgbled");
 	xhr.responseType = "json";
 	xhr.send();
 	xhr.addEventListener("readystatechange", () => {
@@ -106,22 +150,26 @@ function getRgbLedStatus(id) {
 			for (const x in data) {
 				if (data[x].type == "rgbred") {
 					rgb_red = text = data[x].value;
-document.getElementById("rgb_red"+id).textContent = rgb_red;
+					document.getElementById(
+						"rgb_red" + id
+					).textContent = rgb_red;
 				}
 				if (data[x].type == "rgbgreen") {
 					rgb_green = text = data[x].value;
-document.getElementById("rgb_green"+id).textContent = rgb_green;
+					document.getElementById(
+						"rgb_green" + id
+					).textContent = rgb_green;
 				}
 			}
-			}
-		});
-	};
+		}
+	});
+}
 
 function setLedStatus(id) {
 	let localid = id;
 	whichBoard(localid);
 	getLedStatus(localid);
-	
+
 	json = "";
 	let xhr = new XMLHttpRequest();
 	if (led_status[localid] == 1) {
@@ -134,7 +182,7 @@ function setLedStatus(id) {
 			led: "1",
 		});
 	}
-	xhr.open("POST", url+"setled");
+	xhr.open("POST", url + "setled");
 	xhr.send(json);
 	xhr.addEventListener("readystatechange", () => {
 		if (xhr.readyState === 4) {
@@ -142,7 +190,8 @@ function setLedStatus(id) {
 			let text = "";
 			for (const x in data) {
 				if (data[x].type == "led") {
-					led_status[localid] = text = data[x].value;
+					led_status[localid] = text =
+						data[x].value;
 				}
 			}
 			console.log("SET", led_status[localid]);
@@ -151,7 +200,7 @@ function setLedStatus(id) {
 	});
 }
 function setPumpStatus(id) {
-	let idlocal=id;
+	let idlocal = id;
 	whichBoard(idlocal);
 	json = "";
 	let xhr = new XMLHttpRequest();
@@ -165,7 +214,7 @@ function setPumpStatus(id) {
 			pump_right: "1",
 		});
 	}
-	xhr.open("POST", url+"setled");
+	xhr.open("POST", url + "setled");
 	xhr.send(json);
 	xhr.addEventListener("readystatechange", () => {
 		if (xhr.readyState === 4) {
@@ -173,7 +222,8 @@ function setPumpStatus(id) {
 			let text = "";
 			for (const x in data) {
 				if (data[x].type == "pump_right") {
-					pump_right[idlocal]= text = data[x].value;
+					pump_right[idlocal] = text =
+						data[x].value;
 				}
 			}
 			console.log("SET", pump_right[idlocal]);
@@ -185,12 +235,12 @@ function setRgbLedStatus(id) {
 	whichBoard(id);
 	json = "";
 	let xhr = new XMLHttpRequest();
-		json = JSON.stringify({
-		rgbred: document.getElementById("rgb_red"+id).value,
-		rgbblue: document.getElementById("rgb_blue"+id).value,
-		rgbgreen: document.getElementById("rgb_green"+id).value,
-		});
-	xhr.open("POST",url+"setrgbled");
+	json = JSON.stringify({
+		rgbred: document.getElementById("rgb_red" + id).value,
+		rgbblue: document.getElementById("rgb_blue" + id).value,
+		rgbgreen: document.getElementById("rgb_green" + id).value,
+	});
+	xhr.open("POST", url + "setrgbled");
 	xhr.send(json);
 	xhr.addEventListener("readystatechange", () => {
 		if (xhr.readyState === 4) {
@@ -201,83 +251,84 @@ function setRgbLedStatus(id) {
 					led_status = text = data[x].value;
 				}
 			}
-			document.getElementById("rgb_red"+id).textContent =
+			document.getElementById("rgb_red" + id).textContent =
 				rgb_red;
 			getRgbLedStatus(id);
 		}
-
 	});
 }
-function setValuesToBlue (id){
+function setValuesToBlue(id) {
 	whichBoard(id);
-	document.getElementById("rgb_red"+id).value = 0;
-	document.getElementById("rgb_blue"+id).value = 1;
-	document.getElementById("rgb_green"+id).value = 0;
+	document.getElementById("rgb_red" + id).value = 0;
+	document.getElementById("rgb_blue" + id).value = 1;
+	document.getElementById("rgb_green" + id).value = 0;
 	setRgbLedStatus(id);
 }
 
-function setValuesToGreen (id){
+function setValuesToGreen(id) {
 	whichBoard(id);
-	document.getElementById("rgb_red"+id).value = 0;
-	document.getElementById("rgb_blue"+id).value = 0;
-	document.getElementById("rgb_green"+id).value = 1;
+	document.getElementById("rgb_red" + id).value = 0;
+	document.getElementById("rgb_blue" + id).value = 0;
+	document.getElementById("rgb_green" + id).value = 1;
 	setRgbLedStatus(id);
 }
 
-function setValuesToRed (id){
+function setValuesToRed(id) {
 	whichBoard(id);
-	document.getElementById("rgb_red"+id).value = 1;
-	document.getElementById("rgb_blue"+id).value = 0;
-	document.getElementById("rgb_green"+id).value = 0;
+	document.getElementById("rgb_red" + id).value = 1;
+	document.getElementById("rgb_blue" + id).value = 0;
+	document.getElementById("rgb_green" + id).value = 0;
 	setRgbLedStatus(id);
 }
-function loop(id){
+function loop(id) {
 	whichBoard(id);
-for (let i = 0; i < 200; i++) {
-	document.getElementById("rgb_red"+id).value = i;
-	document.getElementById("rgb_green"+id).value = 0;
-	document.getElementById("rgb_blue"+id).value = 0;
-	setRgbLedStatus(id)
-	console.log(i);
+	for (let i = 0; i < 200; i++) {
+		document.getElementById("rgb_red" + id).value = i;
+		document.getElementById("rgb_green" + id).value = 0;
+		document.getElementById("rgb_blue" + id).value = 0;
+		setRgbLedStatus(id);
+		console.log(i);
+	}
+	for (let i = 200; i > 0; i--) {
+		document.getElementById("rgb_red" + id).value = i;
+		document.getElementById("rgb_green" + id).value = 0;
+		document.getElementById("rgb_blue" + id).value = 0;
+		setRgbLedStatus(id);
+		console.log(i);
+	}
+	for (let i = 0; i < 200; i++) {
+		document.getElementById("rgb_red" + id).value = 0;
+		document.getElementById("rgb_green" + id).value = i;
+		document.getElementById("rgb_blue" + id).value = 0;
+		setRgbLedStatus(id);
+		console.log(i);
+	}
+	for (let i = 200; i > 0; i--) {
+		document.getElementById("rgb_red" + id).value = 0;
+		document.getElementById("rgb_green" + id).value = i;
+		document.getElementById("rgb_blue" + id).value = 0;
+		setRgbLedStatus(id);
+		console.log(i);
+	}
+	for (let i = 0; i < 200; i++) {
+		document.getElementById("rgb_red" + id).value = 0;
+		document.getElementById("rgb_green" + id).value = 0;
+		document.getElementById("rgb_blue" + id).value = i;
+		setRgbLedStatus(id);
+		console.log(i);
+	}
+	for (let i = 200; i > 0; i--) {
+		document.getElementById("rgb_red" + id).value = 0;
+		document.getElementById("rgb_green" + id).value = 0;
+		document.getElementById("rgb_blue" + id).value = i;
+		setRgbLedStatus(id);
+		console.log(i);
+	}
+	document.getElementById("rgb_red" + id).value = 0;
+	document.getElementById("rgb_green" + id).value = 0;
+	document.getElementById("rgb_blue" + id).value = 0;
+	setRgbLedStatus(id);
 }
-for (let i = 200; i > 0; i--) {
-	document.getElementById("rgb_red"+id).value = i;
-	document.getElementById("rgb_green"+id).value = 0;
-	document.getElementById("rgb_blue"+id).value = 0;
-	setRgbLedStatus(id)
-	console.log(i);
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
 }
-for (let i = 0; i < 200; i++) {
-	document.getElementById("rgb_red"+id).value = 0;
-	document.getElementById("rgb_green"+id).value = i;
-	document.getElementById("rgb_blue"+id).value = 0;
-	setRgbLedStatus(id)
-	console.log(i);
-}
-for (let i = 200; i > 0; i--) {
-	document.getElementById("rgb_red"+id).value = 0;
-	document.getElementById("rgb_green"+id).value = i;
-	document.getElementById("rgb_blue"+id).value = 0;
-	setRgbLedStatus(id)
-	console.log(i);
-}
-for (let i = 0; i < 200; i++) {
-	document.getElementById("rgb_red"+id).value = 0;
-	document.getElementById("rgb_green"+id).value = 0;
-	document.getElementById("rgb_blue"+id).value = i;
-	setRgbLedStatus(id)
-	console.log(i);
-}
-for (let i = 200; i > 0; i--) {
-	document.getElementById("rgb_red"+id).value = 0;
-	document.getElementById("rgb_green"+id).value = 0;
-	document.getElementById("rgb_blue"+id).value = i;
-	setRgbLedStatus(id)
-	console.log(i);
-}
-	document.getElementById("rgb_red"+id).value = 0;
-	document.getElementById("rgb_green"+id).value = 0;
-	document.getElementById("rgb_blue"+id).value = 0;
-	setRgbLedStatus(id)
-}
-

@@ -9,7 +9,7 @@
 #define LED_BLUE_PIN 25
 #define PUMP_PIN 18
 #define MOISTURE_PIN 35
-const char *SSID = "POHANET";
+const char *SSID = "POHANET_ESP32";
 const char *PWD = "Emese123";
 WebServer server(80);
  
