@@ -14,9 +14,8 @@ wsServer.on('connection', function (socket) {
    
     socket.on('message', function (msg) {
         console.log("Received message from client: "  + msg);
-   
         wsServer.clients.forEach(function (client) {
-            client.send(JSON.stringify(msg));
+            client.send(msg.toString());
         });
 
     });

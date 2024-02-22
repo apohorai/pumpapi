@@ -10,28 +10,50 @@ websocket = new WebSocket(wsUri);
 
 websocket.onopen = function (evt) {
 	console.log("connected to websocket server");
-	websocket.send("GUI connected...");
+	const msg = {
+        type: "GUI connected",
+      };
+	console.log(JSON.stringify(msg)+"this is what I sent");
+	websocket.send(JSON.stringify(msg));
 };
-websocket.onmessage = function (msg) {
-	var string_arr = JSON.parse(msg["data"]).data;
-	var string = "";
+//websocket.onmessage = function (msg) {
+	// var string_arr = JSON.parse(msg["data"]).data;
+//	var string = "";
 
-	string_arr.forEach((element) => {
-		string += String.fromCharCode(element);
-	});
+	// string_arr.forEach((element) => {
+	// 	string += String.fromCharCode(element);
+	// });
 
-	message = JSON.parse(string);
-	//sleep(100).then(() => { getLedStatus(2) });
-	if (message.item == "led") {
-		getLedStatus(2);
-	}
-	if (message.item == "moisture") {
-			document.getElementById(
-				"moisture_value" + 2 
-			).textContent = (message.value - 1100) / 2000;
-		console.log(message.value)
-	}
-};
+	//console.log(string_arr);
+	// var aaa = msg(["data"]).data;
+	// console.log("aaa"+aaa);
+	// console.log(msg);
+	// var string_arr = JSON.parse(msg);
+	// var string = "";
+	// console.log(string_arr);
+	// string_arr.forEach((element) => {
+	// 	string += String.fromCharCode(element);
+	// });
+
+	// message = JSON.parse(string);
+	// //sleep(100).then(() => { getLedStatus(2) });
+	// if (message.item == "led") {
+	// 	getLedStatus(2);
+	// }
+	// THIS IS WORKING, BUT TURNED OFF FOR TESTING
+	// if (message.item == "moisture") {
+	// 		document.getElementById(
+	// 			"moisture_value" + 2 
+	// 		).textContent = (message.value - 1100) / 2000;
+	// 	console.log(message.value)
+	// }
+//};
+websocket.addEventListener("message", (event) => {
+	console.log("Message from server ", event["data"]);
+	console.log(JSON.parse(event["data"]).type);
+	console.log(JSON.parse(event["data"]).device_id);
+	
+  });
 function renderHTML(){
 	for (let i = 1; i < 4; i++) {
 		getLedStatus(i);

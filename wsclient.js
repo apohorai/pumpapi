@@ -12,7 +12,10 @@ const ws = new WebSocket(serverAddress, {
 });
 // Open a connection to my wsserver
 ws.on('open', function() {
-    ws.send("Scheduler client connected");
+  const msg = {
+    type: "Scheduler connected",
+  };
+    ws.send(JSON.stringify(msg));
     myLoop();
     
 });
@@ -29,8 +32,9 @@ function myLoop(){
     
       axios
       .get('http://192.168.1.103/led')
-      .then(res => {
+      .then(res => {       
         led=res.data.value;
+        console.log("requested the current status of the led "+led);
         switch(led) {
             case 1:
               led=0;
@@ -39,13 +43,12 @@ function myLoop(){
               led=1;
               break;
           }
-          axios
-          .post('http://192.168.1.103/setled', {
+          axios.post('http://192.168.1.103/setled', {
             led: led,
           })
           .then(res => {
             //console.log(`statusCode: ${res.status}`);
-            console.log("Led set to:"+led);
+            console.log("set led to:"+led);
           })
           .catch(error => {
             console.error(error);
@@ -62,7 +65,8 @@ function myLoop(){
         item: "led",
         value: led
       };
+      console.log("aa"+JSON.stringify(msg));
     ws.send(JSON.stringify(msg));
-    console.log("");
-    sleep(1000).then(() => { myLoop() });
+    
+    // sleep(1000).then(() => { myLoop() });
 }
